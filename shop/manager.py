@@ -1,4 +1,28 @@
 from .validation import *
+import json
+import logging
+
+logging.basicConfig(
+    filename="app.log",
+    filemode="a",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)-8s %(message)s",
+    encoding="utf-8",
+)
+
+
+def update(id, items, total, status):
+    order = {
+        "id": id,
+        "items": items,
+        "total": total,
+        "status": status
+    }
+
+
+    with open("cart.json", "w", encoding="utf-8") as file:
+        json.dump(order, file, indent=2, ensure_ascii=False)
+
 
 
 
@@ -46,20 +70,21 @@ def id_order():
 
 def create_order():
     total = 0
-    cont = True
-    while cont is True:
+    items= []
+    while True:
         id_product = get_id()
         quantities_product = get_num("quantity")
+        items.append({"product_id": id_product, "quantity": quantities_product})
         total += total_price(id_product, quantities_product)
         cont = input("Do you need another product?\n"
               "Enter 0 to exit")
-        if cont != 0:
-            cont = True
-        else:
+        if cont == "0":
             break
+
     discount_percents = discount(total)
-    print(f"price {total} , discount{discount_percents}% , after discount {(total * (100 / (100 - discount_percents)))}")
-    return  f"id_order{id_order()} , price {total} , discount{discount_percents}% , after discount {(total * (100 / (100 - discount_percents)))}"
+    print(f"price {total} , discount{discount_percents}% , after discount {(total * ((100 - discount_percents) /100))}")
+    update(id_order(), items, total * (100 / (100 - discount_percents)), "open")
+    return  "!"
 
 
 
@@ -88,4 +113,5 @@ def close_order():
 
 
 def Show_sales_report():
+    #
     pass

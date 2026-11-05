@@ -1,9 +1,11 @@
 from shop.printer import menu
 from shop.manager import *
 
-choose = menu()
+
+choose = None
 
 while True:
+
 
     if choose == "1":
         create_order()
@@ -23,9 +25,7 @@ while True:
     elif choose == "0":
         break
 
-    else:
-        print("invalid choice")
-        choose = menu()
-
     choose = menu()
+
+
 
